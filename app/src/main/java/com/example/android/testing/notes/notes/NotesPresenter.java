@@ -44,28 +44,33 @@ public class NotesPresenter implements NotesContract.UserActionsListener {
 
     @Override
     public void loadNotes(boolean forceUpdate) {
-//        mNotesView.setProgressIndicator(true);
-//        if (forceUpdate) {
-//            mNotesRepository.refreshData();
-//        }
-//
-//        // The network request might be handled in a different thread so make sure Espresso knows
-//        // that the app is busy until the response is handled.
-//        EspressoIdlingResource.increment(); // App is busy until further notice
-//
-//        mNotesRepository.getNotes(new NotesRepository.LoadNotesCallback() {
-//            @Override
-//            public void onNotesLoaded(List<Note> notes) {
-//                EspressoIdlingResource.decrement(); // Set app as idle.
-//                mNotesView.setProgressIndicator(false);
-//                mNotesView.showNotes(notes);
-//            }
-//        });
+
+        // This method is gonna display a progress indicator
+        mNotesView.setProgressIndicator(true);
+        if (forceUpdate) {
+            mNotesRepository.refreshData();
+        }
+
+        // The network request might be handled in a different thread so make sure Espresso knows
+        // that the app is busy until the response is handled.
+        EspressoIdlingResource.increment(); // App is busy until further notice
+
+        // Espresso increment is gonna tell espresso that the app is busy until further notice
+        // Espresso decrement is gonna tell espresso that the app is no longer busy
+
+        mNotesRepository.getNotes(new NotesRepository.LoadNotesCallback() {
+            @Override
+            public void onNotesLoaded(List<Note> notes) {
+                EspressoIdlingResource.decrement(); // Set app as idle.
+                mNotesView.setProgressIndicator(false);
+                mNotesView.showNotes(notes);
+            }
+        });
     }
 
     @Override
     public void addNewNote() {
-//        mNotesView.showAddNote();
+        mNotesView.showAddNote();
     }
 
     @Override
